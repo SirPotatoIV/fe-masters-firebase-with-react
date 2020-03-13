@@ -4,7 +4,8 @@ export default function Posts(props) {
   const firestore = props.firebase;
 
   useEffect(() => {
-    console.log("useEffect occurred");
+    const posts = firestore.CollectionReference("posts").get();
+    console.log(posts);
   }, []);
 
   return <div>Test</div>;
