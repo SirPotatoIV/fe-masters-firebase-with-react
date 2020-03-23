@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { firestore } from "./firebase";
-import Posts from "./components/Posts";
+import Post from "./components/Post";
+import PostCreation from "./components/PostCreation";
 
 function App() {
   // used for storing all the posts
@@ -29,10 +30,12 @@ function App() {
 
   return (
     <div className="App">
+      <h1>Create a Post</h1>
+      <PostCreation />
       <h1>All the Firestore Posts</h1>
       <div>
         {posts.map(post => (
-          <Posts data={post} key={post.id} />
+          <Post data={post} key={post.id} />
         ))}
       </div>
     </div>
