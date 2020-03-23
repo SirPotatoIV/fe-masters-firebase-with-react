@@ -1,12 +1,13 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 export default function Posts(props) {
-  const firestore = props.firebase;
+  const post = props.data[0];
+  const { title, content } = post;
 
-  useEffect(() => {
-    const posts = firestore.CollectionReference("posts").get();
-    console.log(posts);
-  }, []);
-
-  return <div>Test</div>;
+  return (
+    <div>
+      <h1>Title: {title}</h1>
+      <p>Content: {content}</p>
+    </div>
+  );
 }

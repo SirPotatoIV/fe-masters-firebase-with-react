@@ -1,28 +1,39 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import { firestore } from "./firebase";
 import Posts from "./components/Posts";
 
 function App() {
-  async function getFirestoreData() {
-    try {
-      const snapshot = await firestore.collection("posts").get();
-      console.log(snapshot);
+  // used for storing all the posts
+  const [posts, setPosts] = useState([]);
 
-      snapshot.forEach(doc => {
-        const id = doc.id;
-        const data = doc.data();
+  useEffect(() => {
+    async function getFirestoreData() {
+      try {
+        // gets a reference to a snapshot in time from the firestore database. This is specifically looking at the collection called posts
+        const snapshot = await firestore.collection("posts").get();
 
-        console.log({ id, data });
-      });
-    } catch (error) {
-      console.log("this error occurred: ", error);
+        // takes all the docs from the specific snapshot and puts them into an array called newPosts
+        const newPosts = snapshot.docs.map(doc => {
+          return { id: doc.id, ...doc.data() };
+        });
+
+        // sets the state of posts to newPosts
+        setPosts(newPosts);
+      } catch (error) {
+        console.log("this error occurred: ", error);
+      }
     }
-  }
-  getFirestoreData();
+    getFirestoreData();
+  }, []);
 
-  console.log();
-  return <div className="App">{/* <Posts firebase={firestore} /> */}</div>;
+  return (
+    <div className="App">
+      {posts.map(post => (
+        <Posts data={posts} key={post.id} />
+      ))}
+    </div>
+  );
 }
 
 export default App;
