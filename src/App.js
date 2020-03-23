@@ -29,9 +29,12 @@ function App() {
 
   return (
     <div className="App">
-      {posts.map(post => (
-        <Posts data={posts} key={post.id} />
-      ))}
+      <h1>All the Firestore Posts</h1>
+      <div>
+        {posts.map(post => (
+          <Posts data={post} key={post.id} />
+        ))}
+      </div>
     </div>
   );
 }
