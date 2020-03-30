@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 
 export default function PostCreation(props) {
+  // passing firestore through props
   const { firestore } = props;
+  // store title for post
   const [title, setTitle] = useState("");
+  // store content for post
   const [content, setContent] = useState("");
 
-  const handlePostCreation = async post => {
+  // function to adding a post to the firestore database when the button is clicked
+  const handlePostCreation = async () => {
+    // take title and content for post and store in an object
+    const post = { title, content };
+    // adds post to firestore database
     const docRef = await firestore.collection("posts").add(post);
     console.log(docRef);
   };
@@ -21,10 +28,23 @@ export default function PostCreation(props) {
           setTitle(target.value);
         }}
       ></input>
+
       <br></br>
+
       <label htmlFor="content">Content:</label>
-      <input type="text" id="content"></input>
-      <button type="button">Create Post</button>
+      <input
+        type="text"
+        id="content"
+        onChange={({ target }) => {
+          setContent(target.value);
+        }}
+      ></input>
+
+      <br></br>
+
+      <button type="button" onClick={handlePostCreation}>
+        Create Post
+      </button>
     </div>
   );
 }

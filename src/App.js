@@ -31,7 +31,7 @@ function App() {
   return (
     <div className="App">
       <h1>Create a Post</h1>
-      <PostCreation />
+      <PostCreation firestore={firestore} />
       <h1>All the Firestore Posts</h1>
       <div>
         {posts.map(post => (
