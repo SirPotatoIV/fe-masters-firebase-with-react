@@ -15,7 +15,7 @@ function App() {
         const snapshot = await firestore.collection("posts").get();
 
         // takes all the docs from the specific snapshot and puts them into an array called newPosts
-        const newPosts = snapshot.docs.map(doc => {
+        const newPosts = snapshot.docs.map((doc) => {
           return { id: doc.id, ...doc.data() };
         });
 
@@ -28,13 +28,15 @@ function App() {
     getFirestoreData();
   }, []);
 
+  async function handleDelete() {}
+
   return (
     <div className="App">
       <h1>Create a Post</h1>
       <PostCreation firestore={firestore} />
       <h1>All the Firestore Posts</h1>
       <div>
-        {posts.map(post => (
+        {posts.map((post) => (
           <Post data={post} key={post.id} />
         ))}
       </div>
