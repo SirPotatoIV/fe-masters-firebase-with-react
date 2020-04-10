@@ -9,7 +9,7 @@ export default function Posts(props) {
     <div className="post">
       <h2>Title: {title}</h2>
       <p>Content: {content}</p>
-      <button>Delete</button>
+      <button onClick={() => props.handleDelete(post.id)}>Delete</button>
     </div>
   );
 }

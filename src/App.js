@@ -28,7 +28,10 @@ function App() {
     getFirestoreData();
   }, []);
 
-  async function handleDelete() {}
+  async function handleDelete(id) {
+    const updatedPosts = posts.filter((post) => post.id !== id);
+    setPosts(updatedPosts);
+  }
 
   return (
     <div className="App">
@@ -37,7 +40,7 @@ function App() {
       <h1>All the Firestore Posts</h1>
       <div>
         {posts.map((post) => (
-          <Post data={post} key={post.id} />
+          <Post data={post} key={post.id} handleDelete={handleDelete} />
         ))}
       </div>
     </div>
