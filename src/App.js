@@ -29,6 +29,8 @@ function App() {
   }, []);
 
   async function handleDelete(id) {
+    await firestore.doc(`posts/${id}`).delete();
+
     const updatedPosts = posts.filter((post) => post.id !== id);
     setPosts(updatedPosts);
   }
