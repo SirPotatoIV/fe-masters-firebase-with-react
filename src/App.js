@@ -1,52 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./App.css";
-import { firestore } from "./firebase";
-import Post from "./components/Post";
-import PostCreation from "./components/PostCreation";
+import MainPage from "./components/MainPage";
 
 function App() {
-  // used for storing all the posts
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    async function getFirestoreData() {
-      try {
-        // gets a reference to a snapshot in time from the firestore database. This is specifically looking at the collection called posts
-        const snapshot = await firestore.collection("posts").get();
-
-        // takes all the docs from the specific snapshot and puts them into an array called newPosts
-        const newPosts = snapshot.docs.map((doc) => {
-          return { id: doc.id, ...doc.data() };
-        });
-
-        // sets the state of posts to newPosts
-        setPosts(newPosts);
-      } catch (error) {
-        console.log("this error occurred: ", error);
-      }
-    }
-    getFirestoreData();
-  }, []);
-
-  async function handleDelete(id) {
-    await firestore.doc(`posts/${id}`).delete();
-
-    const updatedPosts = posts.filter((post) => post.id !== id);
-    setPosts(updatedPosts);
-  }
-
-  return (
-    <div className="App">
-      <h1>Create a Post</h1>
-      <PostCreation firestore={firestore} />
-      <h1>All the Firestore Posts</h1>
-      <div>
-        {posts.map((post) => (
-          <Post data={post} key={post.id} handleDelete={handleDelete} />
-        ))}
-      </div>
-    </div>
-  );
+  return <MainPage />;
 }
 
 export default App;
