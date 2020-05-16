@@ -8,7 +8,10 @@ class MainPage extends React.Component {
     this.state = {
       title: "",
       content: "",
-      posts: [],
+      posts: [
+        { title: "Example Post 1", content: "This is example 1." },
+        { title: "Example Post 2", content: "This is example 2." },
+      ],
     };
     // Needed because methods are not bound by default in JavaScript
     // -- If you don't bind, using this in the function will not work.
@@ -26,6 +29,19 @@ class MainPage extends React.Component {
       posts: updatedPosts,
     });
   }
+
+  deletePost = (index) => {
+    const postIndex = index;
+    let updatedPosts = [];
+    for (let i = 0; i < this.state.posts.length; i++) {
+      if (i !== postIndex) {
+        updatedPosts.push(this.state.posts[i]);
+      }
+    }
+    this.setState({
+      posts: updatedPosts,
+    });
+  };
 
   render() {
     return (
@@ -52,8 +68,17 @@ class MainPage extends React.Component {
         </label>
         <br></br>
         <button onClick={this.createPost}>Add Post</button>
-        {this.state.posts.map((post) => (
-          <Post key={post.title} title={post.title} content={post.content} />
+        {this.state.posts.map((post, index) => (
+          <div key={post.title}>
+            <Post title={post.title} content={post.content} />
+            <button
+              onClick={() => {
+                this.deletePost(index);
+              }}
+            >
+              Delete
+            </button>
+          </div>
         ))}
       </div>
     );
