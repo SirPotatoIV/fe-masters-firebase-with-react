@@ -1,6 +1,7 @@
 import React from "react";
 // import PostCreation from "./PostCreation";
 import Post from "./Post";
+import { firestore } from "../firebase";
 
 class MainPage extends React.Component {
   constructor(props) {
