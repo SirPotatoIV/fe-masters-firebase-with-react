@@ -1,5 +1,6 @@
 import React from "react";
 // import PostCreation from "./PostCreation";
+import Post from "./Post";
 
 class MainPage extends React.Component {
   constructor(props) {
@@ -51,6 +52,9 @@ class MainPage extends React.Component {
         </label>
         <br></br>
         <button onClick={this.createPost}>Add Post</button>
+        {this.state.posts.map((post) => (
+          <Post key={post.title} title={post.title} content={post.content} />
+        ))}
       </div>
     );
   }
