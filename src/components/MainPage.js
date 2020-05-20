@@ -10,7 +10,7 @@ class MainPage extends React.Component {
       title: "",
       content: "",
       posts: [
-        { title: "Example Post 1", content: "This is example 1." },
+        { title: "Example Post 1", content: " This is example 1." },
         { title: "Example Post 2", content: "This is example 2." },
       ],
     };
@@ -19,6 +19,15 @@ class MainPage extends React.Component {
     // -- You can also use the experimental public class fields syntax
     this.createPost = this.createPost.bind(this);
   }
+
+  componentDidMount = async () => {
+    try {
+      const snapshot = await firestore.collection("posts").get();
+      console.log({ snapshot });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   createPost() {
     const updatedPosts = [
