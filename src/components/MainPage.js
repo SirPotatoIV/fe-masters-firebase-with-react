@@ -23,7 +23,13 @@ class MainPage extends React.Component {
   componentDidMount = async () => {
     try {
       const snapshot = await firestore.collection("posts").get();
-      console.log({ snapshot });
+
+      snapshot.forEach(function (doc) {
+        const id = doc.id;
+        const data = doc.data();
+        console.log({ doc });
+        console.log({ id, data });
+      });
     } catch (err) {
       console.log(err);
     }
