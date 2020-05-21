@@ -1,9 +1,9 @@
 import React from "react";
+import moment from "moment";
 import { firestore } from "../firebase";
 
 class FirestorePost extends React.Component {
   postRef = firestore.doc(`posts/${this.props.id}`);
-
   deletePost = () => {
     this.postRef.delete();
   };
@@ -17,11 +17,14 @@ class FirestorePost extends React.Component {
   };
 
   render() {
+    const date = moment(this.props.createdAt.toDate()).calendar();
+
     return (
       <div>
         <h2>{this.props.title}</h2>
         <p>{this.props.content}</p>
         <p>Star Count: {this.props.stars}</p>
+        <p>Created: {date}</p>
         <button onClick={this.deletePost}>Delete</button>
         <button onClick={this.addStar}>Add Star</button>
       </div>

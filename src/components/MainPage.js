@@ -48,6 +48,7 @@ class MainPage extends React.Component {
       title: this.state.title,
       content: this.state.content,
       stars: 0,
+      createdAt: new Date(),
     };
     // Adding post to Firestore and getting the new posts docRef
     try {
@@ -67,6 +68,10 @@ class MainPage extends React.Component {
       localPosts: updatedPosts,
     });
   }
+
+  testingFuncPass = () => {
+    console.log("I hate you React.");
+  };
 
   deletePost = (index) => {
     // This is passed in by the button being clicked. It is index of the post in the array
@@ -128,13 +133,7 @@ class MainPage extends React.Component {
         ))}
         <h1>Posts Stored in Firestore</h1>
         {this.state.firestorePosts.map((post) => (
-          <FirestorePost
-            key={post.id}
-            id={post.id}
-            title={post.title}
-            content={post.content}
-            stars={post.stars}
-          />
+          <FirestorePost key={post.id} {...post} />
         ))}
       </div>
     );
