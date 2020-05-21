@@ -28,23 +28,11 @@ class MainPage extends React.Component {
   // -- ... causing a data leak. Kind of like accidentally creating a bunch of setInterval or setTimeouts and not killing them.
   unsubscribe = null;
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
     this.unsubscribe = firestore.collection("posts").onSnapshot((snapshot) => {
       const firestorePosts = snapshot.docs.map(collectIdsAndDocs);
       this.setState({ firestorePosts: firestorePosts });
     });
-
-    // try {
-    //   const snapshot = await firestore.collection("posts").get();
-
-    //   const firestorePosts = snapshot.docs.map(collectIdsAndDocs);
-
-    //   this.setState({
-    //     firestorePosts: firestorePosts,
-    //   });
-    // } catch (err) {
-    //   console.log(err);
-    // }
   };
 
   // This is similar to when you clean up junk at the end of the useEffect hook
@@ -61,13 +49,11 @@ class MainPage extends React.Component {
       content: this.state.content,
     };
     // Adding post to Firestore and getting the new posts docRef
-    const docRef = await firestore.collection("posts").add(newPostData);
-    // Getting the post we just created from Firestore
-    // This part isn't really necessary. The instructor was just showing how to get a single doc
-    // const doc = await docRef.get();
-
-    // const newPost = collectIdsAndDocs(doc);
-    // this.setState({ firestorePosts: [newPost, ...this.state.firestorePosts] });
+    try {
+      await firestore.collection("posts").add(newPostData);
+    } catch (error) {
+      console.log("Error occurred trying to add a post to Firestore: ", error);
+    }
   };
 
   createPost() {
@@ -100,19 +86,18 @@ class MainPage extends React.Component {
     });
   };
 
-  deleteFirestorePost = async (id) => {
-    // delete post in Firestore database
-    // -- doc needs to be passed the path of the doc you want.
-    firestore.doc(`posts/${id}`).delete();
-    // store all the current fireStorePosts in state
-    // const allFirestorePosts = this.state.firestorePosts;
-    // // filter the posts so that the post we want to delete is removed
-    // const updatedFirestorePosts = allFirestorePosts.filter(
-    //   (post) => post.id !== id
-    // );
-    // // set the state of the firestorePosts to the updatedFirestorePosts
-    // this.setState({ firestorePosts: updatedFirestorePosts });
-  };
+  // deleteFirestorePost = async (id) => {
+  //   // delete post in Firestore database
+  //   // -- doc needs to be passed the path of the doc you want.
+  //   try {
+  //     await firestore.doc(`posts/${id}`).delete();
+  //   } catch (error) {
+  //     console.log(
+  //       "An error occurred trying to delete a post from Firestore: ",
+  //       error
+  //     );
+  //   }
+  // };
 
   render() {
     return (
@@ -160,7 +145,6 @@ class MainPage extends React.Component {
             id={post.id}
             title={post.title}
             content={post.content}
-            delete={this.deleteFirestorePost}
           />
         ))}
       </div>
