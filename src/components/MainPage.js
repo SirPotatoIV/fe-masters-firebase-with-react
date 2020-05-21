@@ -1,9 +1,9 @@
 import React from "react";
+import { firestore } from "../firebase";
+import { collectIdsAndDocs } from "../utilities";
 // import PostCreation from "./PostCreation";
 import Post from "./Post";
 import FirestorePost from "./FirestorePost";
-import { firestore } from "../firebase";
-import { collectIdsAndDocs } from "../utilities";
 
 class MainPage extends React.Component {
   constructor(props) {
@@ -83,7 +83,8 @@ class MainPage extends React.Component {
   };
 
   deleteFirestorePost = async (id) => {
-    console.log("Deleting Post", id);
+    // remove from Firestore
+    firestore.doc(`posts/${id}`).delete();
     // store all the current fireStorePosts in state
     const allFirestorePosts = this.state.firestorePosts;
     // filter the posts so that the post we want to delete is removed
