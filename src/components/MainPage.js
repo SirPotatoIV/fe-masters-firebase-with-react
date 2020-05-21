@@ -1,6 +1,7 @@
 import React from "react";
 // import PostCreation from "./PostCreation";
 import Post from "./Post";
+import FirestorePost from "./FirestorePost";
 import { firestore } from "../firebase";
 
 class MainPage extends React.Component {
@@ -9,10 +10,11 @@ class MainPage extends React.Component {
     this.state = {
       title: "",
       content: "",
-      posts: [
+      localPosts: [
         { title: "Example Post 1", content: " This is example 1." },
         { title: "Example Post 2", content: "This is example 2." },
       ],
+      firestorePosts: [],
     };
     // Needed because methods are not bound by default in JavaScript
     // -- If you don't bind, using this in the function will not work.
@@ -24,11 +26,11 @@ class MainPage extends React.Component {
     try {
       const snapshot = await firestore.collection("posts").get();
 
-      snapshot.forEach(function (doc) {
-        const id = doc.id;
-        const data = doc.data();
-        console.log({ doc });
-        console.log({ id, data });
+      const firestorePosts = snapshot.docs.map((doc) => {
+        return { id: doc.id, ...doc.data() };
+      });
+      this.setState({
+        firestorePosts: firestorePosts,
       });
     } catch (err) {
       console.log(err);
@@ -37,12 +39,12 @@ class MainPage extends React.Component {
 
   createPost() {
     const updatedPosts = [
-      ...this.state.posts,
+      ...this.state.localPosts,
       { title: this.state.title, content: this.state.content },
     ];
 
     this.setState({
-      posts: updatedPosts,
+      localPosts: updatedPosts,
     });
   }
 
@@ -51,11 +53,11 @@ class MainPage extends React.Component {
     let updatedPosts = [];
     for (let i = 0; i < this.state.posts.length; i++) {
       if (i !== postIndex) {
-        updatedPosts.push(this.state.posts[i]);
+        updatedPosts.push(this.state.localPosts[i]);
       }
     }
     this.setState({
-      posts: updatedPosts,
+      localPosts: updatedPosts,
     });
   };
 
@@ -84,7 +86,8 @@ class MainPage extends React.Component {
         </label>
         <br></br>
         <button onClick={this.createPost}>Add Post</button>
-        {this.state.posts.map((post, index) => (
+        <h1>Original Posts Stored Locally</h1>
+        {this.state.localPosts.map((post, index) => (
           <div key={post.title}>
             <Post title={post.title} content={post.content} />
             <button
@@ -95,6 +98,14 @@ class MainPage extends React.Component {
               Delete
             </button>
           </div>
+        ))}
+        <h1>Posts Stored in Firestore</h1>
+        {this.state.firestorePosts.map((post) => (
+          <FirestorePost
+            key={post.id}
+            title={post.title}
+            content={post.content}
+          />
         ))}
       </div>
     );
