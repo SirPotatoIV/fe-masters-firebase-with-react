@@ -47,6 +47,7 @@ class MainPage extends React.Component {
     const newPostData = {
       title: this.state.title,
       content: this.state.content,
+      stars: 0,
     };
     // Adding post to Firestore and getting the new posts docRef
     try {
@@ -85,19 +86,6 @@ class MainPage extends React.Component {
       localPosts: updatedPosts,
     });
   };
-
-  // deleteFirestorePost = async (id) => {
-  //   // delete post in Firestore database
-  //   // -- doc needs to be passed the path of the doc you want.
-  //   try {
-  //     await firestore.doc(`posts/${id}`).delete();
-  //   } catch (error) {
-  //     console.log(
-  //       "An error occurred trying to delete a post from Firestore: ",
-  //       error
-  //     );
-  //   }
-  // };
 
   render() {
     return (
@@ -145,6 +133,7 @@ class MainPage extends React.Component {
             id={post.id}
             title={post.title}
             content={post.content}
+            stars={post.stars}
           />
         ))}
       </div>
