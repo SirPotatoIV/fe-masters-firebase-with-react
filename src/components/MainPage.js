@@ -64,16 +64,34 @@ class MainPage extends React.Component {
   }
 
   deletePost = (index) => {
+    // This is passed in by the button being clicked. It is index of the post in the array
     const postIndex = index;
+    // used to store all the posts we want to save
     let updatedPosts = [];
+    // go through the posts and only save the ones we want to keep
+    // -- in deleteFirestorePosts I used a filter method which is cleaner looking.
+    // -- This is essentially the same thing, but filter is kinda easier.
     for (let i = 0; i < this.state.posts.length; i++) {
       if (i !== postIndex) {
         updatedPosts.push(this.state.localPosts[i]);
       }
     }
+    // Change the localPosts to only contain the updatedPosts
     this.setState({
       localPosts: updatedPosts,
     });
+  };
+
+  deleteFirestorePost = async (id) => {
+    console.log("Deleting Post", id);
+    // store all the current fireStorePosts in state
+    const allFirestorePosts = this.state.firestorePosts;
+    // filter the posts so that the post we want to delete is removed
+    const updatedFirestorePosts = allFirestorePosts.filter(
+      (post) => post.id !== id
+    );
+    // set the state of the firestorePosts to the updatedFirestorePosts
+    this.setState({ firestorePosts: updatedFirestorePosts });
   };
 
   render() {
@@ -119,8 +137,10 @@ class MainPage extends React.Component {
         {this.state.firestorePosts.map((post) => (
           <FirestorePost
             key={post.id}
+            id={post.id}
             title={post.title}
             content={post.content}
+            delete={this.deleteFirestorePost}
           />
         ))}
       </div>
