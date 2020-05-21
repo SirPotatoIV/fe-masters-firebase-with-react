@@ -3,6 +3,7 @@ import React from "react";
 import Post from "./Post";
 import FirestorePost from "./FirestorePost";
 import { firestore } from "../firebase";
+import { collectIdsAndDocs } from "../utilities";
 
 class MainPage extends React.Component {
   constructor(props) {
@@ -26,15 +27,29 @@ class MainPage extends React.Component {
     try {
       const snapshot = await firestore.collection("posts").get();
 
-      const firestorePosts = snapshot.docs.map((doc) => {
-        return { id: doc.id, ...doc.data() };
-      });
+      const firestorePosts = snapshot.docs.map(collectIdsAndDocs);
       this.setState({
         firestorePosts: firestorePosts,
       });
     } catch (err) {
       console.log(err);
     }
+  };
+
+  createFirestorePost = async (post) => {
+    // Taking data the user has entered into the input fields and setting new variable equal to it
+    const newPostData = {
+      title: this.state.title,
+      content: this.state.content,
+    };
+    // Adding post to Firestore and getting the new posts docRef
+    const docRef = await firestore.collection("posts").add(newPostData);
+    // Getting the post we just created from Firestore
+    // This part isn't really necessary. The instructor was just showing how to get a single doc
+    const doc = await docRef.get();
+
+    const newPost = collectIdsAndDocs(doc);
+    this.setState({ firestorePosts: [newPost, ...this.state.firestorePosts] });
   };
 
   createPost() {
@@ -85,7 +100,8 @@ class MainPage extends React.Component {
           />
         </label>
         <br></br>
-        <button onClick={this.createPost}>Add Post</button>
+        <button onClick={this.createPost}>Add to Local</button>
+        <button onClick={this.createFirestorePost}>Add to Firestore</button>
         <h1>Original Posts Stored Locally</h1>
         {this.state.localPosts.map((post, index) => (
           <div key={post.title}>
