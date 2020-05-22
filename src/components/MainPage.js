@@ -1,9 +1,10 @@
 import React from "react";
-import { firestore } from "../firebase";
+import { firestore, signInWithGoogle, auth } from "../firebase";
 import { collectIdsAndDocs } from "../utilities";
 // import PostCreation from "./PostCreation";
 import Post from "./Post";
 import FirestorePost from "./FirestorePost";
+import User from "./User";
 
 class MainPage extends React.Component {
   constructor(props) {
@@ -16,6 +17,10 @@ class MainPage extends React.Component {
         { title: "Example Post 2", content: "This is example 2." },
       ],
       firestorePosts: [],
+      user: {
+        displayName: null,
+        email: null,
+      },
     };
     // Needed because methods are not bound by default in JavaScript
     // -- If you don't bind, using this in the function will not work.
@@ -26,12 +31,20 @@ class MainPage extends React.Component {
   // this will be used for cleaning up our code.
   // -- in componentDidMount we will call a function. This function will continue to run if we do not kill it
   // -- ... causing a data leak. Kind of like accidentally creating a bunch of setInterval or setTimeouts and not killing them.
-  unsubscribe = null;
+  unsubscribeFromFirestore = null;
+  unsubscribeFromAuth = null;
 
   componentDidMount = () => {
-    this.unsubscribe = firestore.collection("posts").onSnapshot((snapshot) => {
-      const firestorePosts = snapshot.docs.map(collectIdsAndDocs);
-      this.setState({ firestorePosts: firestorePosts });
+    this.unsubscribeFromFirestore = firestore
+      .collection("posts")
+      .onSnapshot((snapshot) => {
+        const firestorePosts = snapshot.docs.map(collectIdsAndDocs);
+        this.setState({ firestorePosts: firestorePosts });
+      });
+
+    this.unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
+      this.setState({ user });
+      console.log(user);
     });
   };
 
@@ -39,7 +52,7 @@ class MainPage extends React.Component {
   // -- In useEffect you return the function to clean it up. In a class component ...
   // ... you use componentWillUnmount.
   componentWillUnmount = () => {
-    this.unsubscribe();
+    this.unsubscribeFromFirestore();
   };
 
   createFirestorePost = async (post) => {
@@ -69,10 +82,6 @@ class MainPage extends React.Component {
     });
   }
 
-  testingFuncPass = () => {
-    console.log("I hate you React.");
-  };
-
   deletePost = (index) => {
     // This is passed in by the button being clicked. It is index of the post in the array
     const postIndex = index;
@@ -95,6 +104,11 @@ class MainPage extends React.Component {
   render() {
     return (
       <div>
+        <User
+          displayName={this.state.user.displayName}
+          email={this.state.user.email}
+        />
+        <button onClick={signInWithGoogle}>Sign-in with Google</button>
         <h2>Create a New Post </h2>
         <label htmlFor="postTitle">
           Title of Post
