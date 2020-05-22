@@ -1,5 +1,5 @@
 import React from "react";
-import { firestore, signInWithGoogle, auth } from "../firebase";
+import { firestore, auth, signInWithGoogle, signOut } from "../firebase";
 import { collectIdsAndDocs } from "../utilities";
 // import PostCreation from "./PostCreation";
 import Post from "./Post";
@@ -18,6 +18,7 @@ class MainPage extends React.Component {
       ],
       firestorePosts: [],
       user: {
+        uid: null,
         displayName: null,
         email: null,
       },
@@ -43,8 +44,12 @@ class MainPage extends React.Component {
       });
 
     this.unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
-      this.setState({ user });
-      console.log(user);
+      const loggedInUser = user || {
+        uid: null,
+        displayName: null,
+        email: null,
+      };
+      this.setState({ user: loggedInUser });
     });
   };
 
@@ -53,6 +58,7 @@ class MainPage extends React.Component {
   // ... you use componentWillUnmount.
   componentWillUnmount = () => {
     this.unsubscribeFromFirestore();
+    this.unsubscribeFromAuth();
   };
 
   createFirestorePost = async (post) => {
@@ -62,6 +68,10 @@ class MainPage extends React.Component {
       content: this.state.content,
       stars: 0,
       createdAt: new Date(),
+      user: {
+        displayName: this.state.user.displayName,
+        email: this.state.user.email,
+      },
     };
     // Adding post to Firestore and getting the new posts docRef
     try {
@@ -109,6 +119,7 @@ class MainPage extends React.Component {
           email={this.state.user.email}
         />
         <button onClick={signInWithGoogle}>Sign-in with Google</button>
+        <button onClick={signOut}>Sign Out</button>
         <h2>Create a New Post </h2>
         <label htmlFor="postTitle">
           Title of Post
