@@ -1,5 +1,5 @@
 import React from "react";
-import { firestore, auth, signInWithGoogle, signOut } from "../firebase";
+import { firestore, auth } from "../firebase";
 import { collectIdsAndDocs } from "../utilities";
 // import PostCreation from "./PostCreation";
 import Post from "./Post";
@@ -12,10 +12,6 @@ class MainPage extends React.Component {
     this.state = {
       title: "",
       content: "",
-      localPosts: [
-        { title: "Example Post 1", content: " This is example 1." },
-        { title: "Example Post 2", content: "This is example 2." },
-      ],
       firestorePosts: [],
       user: {
         uid: null,
@@ -26,7 +22,7 @@ class MainPage extends React.Component {
     // Needed because methods are not bound by default in JavaScript
     // -- If you don't bind, using this in the function will not work.
     // -- You can also use the experimental public class fields syntax
-    this.createPost = this.createPost.bind(this);
+    // this.createPost = this.createPost.bind(this);
   }
 
   // this will be used for cleaning up our code.
@@ -81,36 +77,6 @@ class MainPage extends React.Component {
     }
   };
 
-  createPost() {
-    const updatedPosts = [
-      ...this.state.localPosts,
-      { title: this.state.title, content: this.state.content },
-    ];
-
-    this.setState({
-      localPosts: updatedPosts,
-    });
-  }
-
-  deletePost = (index) => {
-    // This is passed in by the button being clicked. It is index of the post in the array
-    const postIndex = index;
-    // used to store all the posts we want to save
-    let updatedPosts = [];
-    // go through the posts and only save the ones we want to keep
-    // -- in deleteFirestorePosts I used a filter method which is cleaner looking.
-    // -- This is essentially the same thing, but filter is kinda easier.
-    for (let i = 0; i < this.state.posts.length; i++) {
-      if (i !== postIndex) {
-        updatedPosts.push(this.state.localPosts[i]);
-      }
-    }
-    // Change the localPosts to only contain the updatedPosts
-    this.setState({
-      localPosts: updatedPosts,
-    });
-  };
-
   render() {
     return (
       // User Login and information
@@ -120,8 +86,6 @@ class MainPage extends React.Component {
             displayName={this.state.user.displayName}
             email={this.state.user.email}
           />
-          <button onClick={signInWithGoogle}>Sign-in with Google</button>
-          <button onClick={signOut}>Sign Out</button>
         </div>
 
       {/* Create a post */}
