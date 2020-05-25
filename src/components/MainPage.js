@@ -113,13 +113,16 @@ class MainPage extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="App">
+        <div className="user">
         <User
           displayName={this.state.user.displayName}
           email={this.state.user.email}
         />
         <button onClick={signInWithGoogle}>Sign-in with Google</button>
         <button onClick={signOut}>Sign Out</button>
+      </div>
+      <div className="post-creation">
         <h2>Create a New Post </h2>
         <label htmlFor="postTitle">
           Title of Post
@@ -143,23 +146,28 @@ class MainPage extends React.Component {
         <br></br>
         <button onClick={this.createPost}>Add to Local</button>
         <button onClick={this.createFirestorePost}>Add to Firestore</button>
-        <h1>Original Posts Stored Locally</h1>
-        {this.state.localPosts.map((post, index) => (
-          <div key={post.title}>
-            <Post title={post.title} content={post.content} />
-            <button
-              onClick={() => {
-                this.deletePost(index);
-              }}
-            >
-              Delete
-            </button>
-          </div>
-        ))}
-        <h1>Posts Stored in Firestore</h1>
-        {this.state.firestorePosts.map((post) => (
-          <FirestorePost key={post.id} {...post} />
-        ))}
+      </div>
+        <div className="post-container">
+          <h2>Original Posts Stored Locally</h2>
+          {this.state.localPosts.map((post, index) => (
+            <div key={post.title}>
+              <Post title={post.title} content={post.content} />
+              <button
+                onClick={() => {
+                  this.deletePost(index);
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          ))}
+        </div>
+        <div className="post-container">
+          <h2>Posts Stored in Firestore</h2>
+          {this.state.firestorePosts.map((post) => (
+            <FirestorePost key={post.id} {...post} />
+          ))}
+        </div>
       </div>
     );
   }
