@@ -113,55 +113,44 @@ class MainPage extends React.Component {
 
   render() {
     return (
+      // User Login and information
       <div className="App">
         <div className="user">
-        <User
-          displayName={this.state.user.displayName}
-          email={this.state.user.email}
-        />
-        <button onClick={signInWithGoogle}>Sign-in with Google</button>
-        <button onClick={signOut}>Sign Out</button>
-      </div>
-      <div className="post-creation">
-        <h2>Create a New Post </h2>
-        <label htmlFor="postTitle">
-          Title of Post
-          <input
-            id="postTitle"
-            type="text"
-            placeholder="Title of Post"
-            onChange={({ target }) => this.setState({ title: target.value })}
+          <User
+            displayName={this.state.user.displayName}
+            email={this.state.user.email}
           />
-        </label>
-        <br></br>
-        <label htmlFor="postContent">
-          Content of Post
-          <input
-            id="postContent"
-            type="text"
-            placeholder="Content of Post"
-            onChange={({ target }) => this.setState({ content: target.value })}
-          />
-        </label>
-        <br></br>
-        <button onClick={this.createPost}>Add to Local</button>
-        <button onClick={this.createFirestorePost}>Add to Firestore</button>
-      </div>
-        <div className="post-container">
-          <h2>Original Posts Stored Locally</h2>
-          {this.state.localPosts.map((post, index) => (
-            <div key={post.title}>
-              <Post title={post.title} content={post.content} />
-              <button
-                onClick={() => {
-                  this.deletePost(index);
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          ))}
+          <button onClick={signInWithGoogle}>Sign-in with Google</button>
+          <button onClick={signOut}>Sign Out</button>
         </div>
+
+      {/* Create a post */}
+        <div className="post-creation">
+          <h2>Create a New Post </h2>
+          <label htmlFor="postTitle">
+            Title of Post
+            <input
+              id="postTitle"
+              type="text"
+              placeholder="Title of Post"
+              onChange={({ target }) => this.setState({ title: target.value })}
+            />
+          </label>
+          <br></br>
+          <label htmlFor="postContent">
+            Content of Post
+            <input
+              id="postContent"
+              type="text"
+              placeholder="Content of Post"
+              onChange={({ target }) => this.setState({ content: target.value })}
+            />
+          </label>
+          <br></br>
+          <button onClick={this.createFirestorePost}>Add to Firestore</button>
+        </div>
+       
+       {/* User's Posts */}
         <div className="post-container">
           <h2>Posts Stored in Firestore</h2>
           {this.state.firestorePosts.map((post) => (
