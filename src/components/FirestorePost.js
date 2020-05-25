@@ -23,8 +23,7 @@ class FirestorePost extends React.Component {
       <div>
         <h2>{this.props.title}</h2>
         <p>{this.props.content}</p>
-        <p>Star Count: {this.props.stars}</p>
-        <p>Created: {date}</p>
+        <p><strong>Star Count:</strong> {this.props.stars} <strong>Created:</strong> {date}</p>
         <button onClick={this.deletePost}>Delete</button>
         <button onClick={this.addStar}>Add Star</button>
       </div>

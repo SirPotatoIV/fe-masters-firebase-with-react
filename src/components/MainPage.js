@@ -2,7 +2,6 @@ import React from "react";
 import { firestore, auth } from "../firebase";
 import { collectIdsAndDocs } from "../utilities";
 // import PostCreation from "./PostCreation";
-import Post from "./Post";
 import FirestorePost from "./FirestorePost";
 import User from "./User";
 
@@ -67,6 +66,7 @@ class MainPage extends React.Component {
       user: {
         displayName: this.state.user.displayName,
         email: this.state.user.email,
+        uid: this.state.user.uid,
       },
     };
     // Adding post to Firestore and getting the new posts docRef
@@ -88,7 +88,7 @@ class MainPage extends React.Component {
           />
         </div>
 
-      {/* Create a post */}
+        {/* Create a post */}
         <div className="post-creation">
           <h2>Create a New Post </h2>
           <label htmlFor="postTitle">
@@ -107,14 +107,16 @@ class MainPage extends React.Component {
               id="postContent"
               type="text"
               placeholder="Content of Post"
-              onChange={({ target }) => this.setState({ content: target.value })}
+              onChange={({ target }) =>
+                this.setState({ content: target.value })
+              }
             />
           </label>
           <br></br>
           <button onClick={this.createFirestorePost}>Add to Firestore</button>
         </div>
-       
-       {/* User's Posts */}
+
+        {/* User's Posts */}
         <div className="post-container">
           <h2>Posts Stored in Firestore</h2>
           {this.state.firestorePosts.map((post) => (
